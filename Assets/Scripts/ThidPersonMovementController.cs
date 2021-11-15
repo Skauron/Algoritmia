@@ -94,6 +94,11 @@ public class ThidPersonMovementController : MonoBehaviour
         {
             aimVirtualCamera.gameObject.SetActive(false);
             canvas.gameObject.SetActive(false);
+            if(objTelekines != null){
+                objTelekines.GetComponent<Target>().gravity = true;
+            }
+            objTelekines = null;
+            telekinesisActive = false;
             animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
             Animation();
             Movement();
@@ -114,8 +119,6 @@ public class ThidPersonMovementController : MonoBehaviour
                 Telekinesis();
             }
         }
-        objTelekines = null;
-        telekinesisActive = false;
     }
 
     #region Aim and Shoot
@@ -138,10 +141,10 @@ public class ThidPersonMovementController : MonoBehaviour
         Shoot(hitTransform);
 
         //Rotation of the player
-        Vector3 worldAimTarget = mouseWorldPosition;
-        worldAimTarget.y = transform.position.y;
-        Vector3 aimDirection = (worldAimTarget - transform.position).normalized;
-        transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f);
+        // Vector3 worldAimTarget = mouseWorldPosition;
+        // worldAimTarget.y = transform.position.y;
+        // Vector3 aimDirection = (worldAimTarget - transform.position).normalized;
+        // transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f);
     }
 
     public void Shoot(Transform hitTransform)
@@ -153,12 +156,14 @@ public class ThidPersonMovementController : MonoBehaviour
                 StartCoroutine(ShootAnimation());
                 if (hitTransform.GetComponent<Target>() != null)
                 {
-                    Instantiate(vfxHitGreen, hitTransform.position, Quaternion.identity);
                     hitTransform.GetComponent<Target>().Hit();
+                    if(listPowers[0].IsActive){
+                       Instantiate(vfxHitGreen, hitTransform.position, Quaternion.identity); 
+                    }
                 }
                 else
                 {
-                    Instantiate(vfxHitRed, hitTransform.position, Quaternion.identity);
+                    //Instantiate(vfxHitRed, hitTransform.position, Quaternion.identity);
                 }
             }
         }
@@ -198,8 +203,10 @@ public class ThidPersonMovementController : MonoBehaviour
     {
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
-         
-        objTelekines.GetComponent<Rigidbody>().AddForce(new Vector3(horizontal, 0f, vertical).normalized, ForceMode.Acceleration);
+        
+        
+        //objTelekines.transform.Translate(new Vector3(horizontal, 0.5f, vertical) * Time.deltaTime);
+        objTelekines.GetComponent<Rigidbody>().AddForce(new Vector3(horizontal, 0.05f, vertical) * Time.deltaTime * 5f, ForceMode.Impulse);
     }
     #endregion
 

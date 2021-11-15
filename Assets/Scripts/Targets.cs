@@ -36,7 +36,7 @@ public class TargetsType : Editor
             case TargetType.Object:
                 {
                     mTargets.objName = EditorGUILayout.TextField("Name", mTargets.objName);
-                    mTargets.force = EditorGUILayout.FloatField("Force", mTargets.force);
+                    mTargets.gravity = EditorGUILayout.Toggle("Gravity", mTargets.gravity);
                     break;
                 }
         }

@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour
 
     [Header("Second Puzzle")]
     [SerializeField] private List<Light> listLightsSecondPuzzle;
+    [SerializeField] private Color RedColor,BlueColor;
     [SerializeField] private PressurePlateController pressurePlate;
     [SerializeField] private bool secondSuccessful;
     [SerializeField] private List<GameObject> listSecondClosedDoor;
@@ -29,42 +30,36 @@ public class LevelManager : MonoBehaviour
         if (listLightsFirstPuzzle.TrueForAll(c => c.gameObject.activeSelf == true) && !firstSuccessful)
         {
             firstSuccessful = true;
-            OpenOrCloseDoor(listFirstClosedDoors[0], "Open");
-            OpenOrCloseDoor(listFirstClosedDoors[1], "Open");
+            OpenOrCloseDoor(listFirstClosedDoors[0], "Open", true);
+            OpenOrCloseDoor(listFirstClosedDoors[1], "Open", true);
         }
 
         //Second Puzzle
         secondSuccessful = pressurePlate.GetIsActive();
         if (secondSuccessful)
         {
-            if (avaible)
+            foreach (var item in listLightsSecondPuzzle)
             {
-                foreach (var item in listLightsSecondPuzzle)
-                {
-                    item.color = new Color(144f, 191f, 255f, 255f);
-                }
-                OpenOrCloseDoor(listSecondClosedDoor[0], "Open");
-                OpenOrCloseDoor(listSecondClosedDoor[1], "Open");
-                avaible = false;
+                item.color = BlueColor;
             }
+            OpenOrCloseDoor(listSecondClosedDoor[0], "Close", false);
+            OpenOrCloseDoor(listSecondClosedDoor[1], "Close", false);
+            OpenOrCloseDoor(listSecondClosedDoor[0], "Open", true);
+            OpenOrCloseDoor(listSecondClosedDoor[1], "Open", true);
         }
         else
         {
-            if (avaible)
+            foreach (var item in listLightsSecondPuzzle)
             {
-                foreach (var item in listLightsSecondPuzzle)
-                {
-                    item.color = new Color(255f, 60f, 54f, 255f);
-                }
-                OpenOrCloseDoor(listSecondClosedDoor[0], "Close");
-                OpenOrCloseDoor(listSecondClosedDoor[1], "Close");
-                avaible = false;
+                item.color = RedColor;
             }
+            OpenOrCloseDoor(listSecondClosedDoor[0], "Close", true);
+            OpenOrCloseDoor(listSecondClosedDoor[1], "Close", true);
         }
     }
 
-    private void OpenOrCloseDoor(GameObject door, string animation)
+    private void OpenOrCloseDoor(GameObject door, string animation, bool State)
     {
-        door.GetComponent<Animator>().SetBool(animation, true);
+        door.GetComponent<Animator>().SetBool(animation, State);
     }
 }

@@ -7,7 +7,7 @@ public class Target : MonoBehaviour
     public TargetType type;
     public string objName;
     public GameObject Object;
-    public float force;
+    public bool gravity = true;
 
     public void Hit()
     {
@@ -21,11 +21,27 @@ public class Target : MonoBehaviour
                 }
                 break;
             case (TargetType.Object):
-                if (player.GetVariablePower(1))
+                if (player.GetVariablePower(2))
                 {
                     player.SetTelekinesis(!player.GetTelekinesis(), gameObject);
+                    gravity = false;
                 }
                 break;
+        }
+    }
+
+    void Update()
+    {
+        if (gameObject.GetComponent<Rigidbody>() != null)
+        {
+            if (gravity)
+            {
+                gameObject.GetComponent<Rigidbody>().useGravity = true;
+            }
+            else
+            {
+                gameObject.GetComponent<Rigidbody>().useGravity = false;
+            }
         }
     }
 }
